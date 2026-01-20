@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Build artifacts
+*.zip
+
+# SVG source files (keep only PNGs for store)
+store/*.svg
+icons/*.svg

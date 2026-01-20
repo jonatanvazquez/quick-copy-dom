@@ -1,0 +1,39 @@
+Quick Copy DOM - The fastest way to copy HTML elements
+
+Stop wasting time with DevTools! Quick Copy DOM lets you visually select any element on a webpage and instantly copy its HTML to your clipboard with a single click.
+
+🎯 HOW IT WORKS
+1. Click the extension icon or press Ctrl+Shift+E (Cmd+Shift+E on Mac)
+2. Hover over any element - it highlights just like DevTools inspector
+3. Click to copy the element's complete HTML code
+4. Done! The HTML is now in your clipboard
+
+✨ KEY FEATURES
+• Visual Element Selection - See exactly what you're selecting with real-time highlighting
+• Element Info Tooltip - Shows tag name, classes, and dimensions while hovering
+• One-Click Copy - Instantly copies outerHTML to clipboard
+• Keyboard Shortcut - Quick access with Ctrl+Shift+E (Cmd+Shift+E on Mac)
+• ESC to Cancel - Press Escape to exit selection mode anytime
+• Lightweight - No bloat, no unnecessary permissions
+• Privacy First - Works entirely locally, no data collection
+
+🔧 PERFECT FOR
+• Web Developers copying components and code snippets
+• Designers extracting HTML structure from any website
+• Students learning HTML by examining real-world examples
+• Content creators grabbing embed codes
+• Anyone who needs to quickly copy HTML without opening DevTools
+
+⚡ WHY QUICK COPY DOM?
+• Faster than DevTools - No need to open inspector, find element, right-click, navigate menus
+• Cleaner workflow - Stay focused on your task without context switching
+• Works everywhere - Compatible with virtually any website
+
+📋 PERMISSIONS EXPLAINED
+• activeTab - To highlight and copy elements on the current page
+• scripting - To inject the selection functionality
+
+This extension does NOT collect any data. All operations happen locally in your browser.
+
+---
+Made with ❤️ for developers who value their time.

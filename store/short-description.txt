@@ -1,0 +1,1 @@
+Visually select any element on a webpage and instantly copy its HTML to clipboard. Like DevTools inspector, but faster.
