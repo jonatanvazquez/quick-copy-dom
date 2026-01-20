@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Copy DOM - Select & Copy HTML Elements Instantly</title>
+  <meta name="description" content="Chrome extension to visually select any element on a webpage and instantly copy its HTML to clipboard. Like DevTools inspector, but faster.">
+  <meta name="keywords" content="chrome extension, copy html, dom inspector, web development, html copy tool">
+  <meta property="og:title" content="Quick Copy DOM">
+  <meta property="og:description" content="Select any element on a webpage and instantly copy its HTML to clipboard.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jonatanvazquez.github.io/quick-copy-dom/">
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/jonatanvazquez/quick-copy-dom/master/icons/icon128.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .logo span {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+    }
+
+    .hero-icon svg {
+      width: 64px;
+      height: 64px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      font-size: 22px;
+      color: rgba(255,255,255,0.7);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 28px;
+      height: 28px;
+      color: #3b82f6;
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+    }
+
+    /* How it works */
+    .how-it-works {
+      padding: 80px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .how-it-works h2 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 60px;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      text-align: center;
+      max-width: 280px;
+    }
+
+    .step-number {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 auto 20px;
+    }
+
+    .step h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Shortcut */
+    .shortcut-section {
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .shortcut-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px 40px;
+    }
+
+    .shortcut-box span {
+      color: rgba(255,255,255,0.6);
+    }
+
+    kbd {
+      background: rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    footer p {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .hero {
+        padding: 60px 0;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#" class="logo">
+          <img src="https://raw.githubusercontent.com/jonatanvazquez/quick-copy-dom/master/icons/icon128.png" alt="Quick Copy DOM">
+          <span>Quick Copy DOM</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="https://github.com/jonatanvazquez/quick-copy-dom">GitHub</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+        </div>
+        <h1>Quick Copy DOM</h1>
+        <p>Select any element on a webpage and instantly copy its HTML to clipboard. Like DevTools inspector, but faster.</p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.21 0 8.21 0 8.21 0 8.21 0 4 1.79 4 6v6c0 4.21 3.79 8 8 8s8-3.79 8-8V6c0-4.21-4.21-6-8-6zm0 2c2.76 0 6 1.34 6 4v6c0 3.31-2.69 6-6 6s-6-2.69-6-6V6c0-2.66 3.24-4 6-4z"/></svg>
+            Add to Chrome
+          </a>
+          <a href="https://github.com/jonatanvazquez/quick-copy-dom" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <h2>Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+            </div>
+            <h3>Visual Highlighting</h3>
+            <p>Elements highlight as you hover, just like Chrome DevTools inspector. See exactly what you're selecting in real-time.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </div>
+            <h3>One-Click Copy</h3>
+            <p>Click any element to instantly copy its complete outerHTML to your clipboard. No menus, no extra steps.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.001M10 8h8"/></svg>
+            </div>
+            <h3>Keyboard Shortcut</h3>
+            <p>Quick access with Ctrl+Shift+E (Cmd+Shift+E on Mac). No need to click the extension icon every time.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+            </div>
+            <h3>Element Info</h3>
+            <p>Tooltip shows tag name, CSS classes, and dimensions while hovering. Know exactly what you're copying.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>Lightweight</h3>
+            <p>Minimal footprint, no bloat. Only activates when you need it, doesn't slow down your browsing.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Privacy First</h3>
+            <p>No data collection, no tracking, no analytics. Everything happens locally in your browser.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Activate</h3>
+            <p>Click the extension icon or press Ctrl+Shift+E to start selecting</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Hover</h3>
+            <p>Move your mouse over the page. Elements highlight as you hover.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Click</h3>
+            <p>Click on any element to copy its HTML to your clipboard instantly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shortcut-section">
+      <div class="container">
+        <div class="shortcut-box">
+          <span>Keyboard shortcut:</span>
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd>
+          <span>(or <kbd>Cmd</kbd> on Mac)</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Made with love for developers who value their time. <a href="https://github.com/jonatanvazquez/quick-copy-dom">View source on GitHub</a></p>
+      <p style="margin-top: 12px;"><a href="https://github.com/jonatanvazquez/quick-copy-dom/blob/master/PRIVACY.md">Privacy Policy</a></p>
+    </div>
+  </footer>
+</body>
+</html>
